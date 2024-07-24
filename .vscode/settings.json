@@ -1,0 +1,5 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "makefile.makePath": "",
+    "makefile.makefilePath": "workout_api"
+}
