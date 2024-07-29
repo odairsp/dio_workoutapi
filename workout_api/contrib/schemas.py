@@ -1,5 +1,5 @@
 from typing import Annotated
-from pydantic import BaseModel, UUID4, Field
+from pydantic import UUID4, BaseModel, Field
 from datetime import datetime
 
 
