@@ -1,14 +1,13 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import Connection
+from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 from workout_api.contrib.models import BaseModel
 from workout_api.contrib.repository.models import *
-
 
 config = context.config
 
@@ -21,7 +20,6 @@ target_metadata = BaseModel.metadata
 
 
 def run_migrations_offline() -> None:
-
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -34,23 +32,21 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def do_run_migration(connection: Connection) -> None:
+def do_run_migrations(connection: Connection) -> None:
     context.configure(connection=connection, target_metadata=target_metadata)
 
     with context.begin_transaction():
         context.run_migrations()
 
 
-async def run_async_migrations():
-
+async def run_async_migrations() -> None:
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
-
     async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migration)
+        await connection.run_sync(do_run_migrations)
 
 
 def run_migrations_online() -> None:
